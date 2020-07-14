@@ -14,7 +14,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('super.driver.update', $data->id) }}">
+                        <form method="POST" action="{{ route('super.driver.update', $data->id) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -93,6 +93,7 @@
 
                                 <div class="col-md-6">
                                     <input id="picture" type="file" class="form-control @error('picture') is-invalid @enderror" name="picture" required autocomplete="picture">
+                                    <input type="hidden" name="old_picture" value="{{ $data->picture }}">
 
                                     @error('picture')
                                     <span class="invalid-feedback" role="alert">

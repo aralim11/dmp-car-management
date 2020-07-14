@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title', 'Driver')
+@section('title', 'Car Edit')
 
 @section('content')
     <div class="container">
@@ -8,23 +8,28 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">@yield('title')
-                        <a href="{{ route('super.driver.index') }}"><button class="btn btn-outline-danger btn-sm float-right">Back</button></a>
+                        <a href="{{ route('super.car.index') }}"><button class="btn btn-outline-danger btn-sm float-right">Back</button></a>
                         @if(session()->has('success_msg'))<span class="badge badge-success float-right" style="margin-top: 1px; margin-right: 8px; padding: 8px; font-size: 11px;">{{ Session('success_msg') }}</span> @endif
                         @if(session()->has('delete_msg'))<span class="badge badge-danger float-right" style="margin-top: 1px; margin-right: 8px; padding: 8px; font-size: 11px;">{{ Session('delete_msg') }}</span> @endif
                     </div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('super.driver.update', $data->id) }}">
+                        <form method="POST" action="{{ route('super.car.update', $data->id) }}">
                             @csrf
                             @method('PUT')
 
                             <div class="form-group row">
-                                <label for="driver_name" class="col-md-4 col-form-label text-md-right">{{ __('Driver Name') }}</label>
+                                <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Assigned Driver') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="driver_name" type="text" class="form-control @error('driver_name') is-invalid @enderror" name="driver_name" value="{{ old('driver_name') }} {{ $data->driver_name }}" required autocomplete="driver_name" autofocus placeholder="Enter Driver Name">
+                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id" required>
+                                        <option value="" >Select Assigned Driver</option>
+                                        @foreach($driver as $drivers)
+                                            <option value="{{ $drivers->id }}" @if($drivers->id == $data->driver_id){{ 'selected' }} @endif>{{ $drivers->driver_name }}</option>
+                                        @endforeach
+                                    </select>
 
-                                    @error('driver_name')
+                                    @error('driver_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -33,12 +38,12 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="license_number" class="col-md-4 col-form-label text-md-right">{{ __('License Number') }}</label>
+                                <label for="number_plate" class="col-md-4 col-form-label text-md-right">{{ __('Car Number') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="license_number" type="text" class="form-control @error('license_number') is-invalid @enderror" name="license_number" value="{{ old('license_number') }} {{ $data->license_number }}" required autocomplete="license_number" placeholder="Enter License Number">
+                                    <input id="number_plate" type="text" class="form-control @error('number_plate') is-invalid @enderror" name="number_plate" value="{{ old('number_plate') }} {{ $data->number_plate }}" required autocomplete="number_plate" autofocus placeholder="Enter Car Number">
 
-                                    @error('license_number')
+                                    @error('number_plate')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -47,12 +52,12 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="phone_number" class="col-md-4 col-form-label text-md-right">{{ __('Phone Number') }}</label>
+                                <label for="engine_number" class="col-md-4 col-form-label text-md-right">{{ __('Engine Number') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="phone_number" type="phone" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number') }} {{ $data->phone_number }}" required autocomplete="phone_number" placeholder="Enter Phone Number">
+                                    <input id="engine_number" type="text" class="form-control @error('engine_number') is-invalid @enderror" name="engine_number" value="{{ old('engine_number') }} {{ $data->engine_number }}" required autocomplete="engine_number" placeholder="Enter Engine Number">
 
-                                    @error('phone_number')
+                                    @error('engine_number')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -61,12 +66,19 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="license_issue_date" class="col-md-4 col-form-label text-md-right">{{ __('License Issue Date') }}</label>
+                                <label for="fuel_type" class="col-md-4 col-form-label text-md-right">{{ __('Fuel Type') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="license_issue_date" type="date" class="form-control @error('license_issue_date') is-invalid @enderror" name="license_issue_date" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->license_issue_date))) }}" required autocomplete="license_issue_date">
+                                    <select class="form-control @error('fuel_type') is-invalid @enderror" id="fuel_type" name="fuel_type" required>
+                                        <option value="" >Select Fuel Type</option>
+                                        <option value="1" @if($data->car_type == 1){{ 'selected' }} @endif>Petrol</option>
+                                        <option value="2" @if($data->car_type == 2){{ 'selected' }} @endif>Diesel</option>
+                                        <option value="3" @if($data->car_type == 3){{ 'selected' }} @endif>Octane</option>
+                                        <option value="4" @if($data->car_type == 4){{ 'selected' }} @endif>Kerosene</option>
+                                        <option value="5" @if($data->car_type == 5){{ 'selected' }} @endif>GAS</option>
+                                    </select>
 
-                                    @error('license_issue_date')
+                                    @error('fuel_type')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -75,12 +87,12 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="license_exp_date" class="col-md-4 col-form-label text-md-right">{{ __('License Expire Date') }}</label>
+                                <label for="fuel_consumption" class="col-md-4 col-form-label text-md-right">{{ __('Fuel Consumption') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="license_exp_date" type="date" class="form-control @error('license_exp_date') is-invalid @enderror" name="license_exp_date" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->license_exp_date))) }}" required autocomplete="license_exp_date">
+                                    <input id="fuel_consumption" type="text" class="form-control @error('fuel_consumption') is-invalid @enderror" value="{{ old('fuel_consumption') }} {{ $data->fuel_consumption }}" name="fuel_consumption" required autocomplete="fuel_consumption" placeholder="Enter Fuel Consumption">
 
-                                    @error('license_exp_date')
+                                    @error('fuel_consumption')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -89,12 +101,89 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="picture" class="col-md-4 col-form-label text-md-right">{{ __('Photo') }}</label>
+                                <label for="car_type" class="col-md-4 col-form-label text-md-right">{{ __('Car Type') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="picture" type="file" class="form-control @error('picture') is-invalid @enderror" name="picture" required autocomplete="picture">
+                                    <select class="form-control @error('car_type') is-invalid @enderror" id="car_type" name="car_type" required>
+                                        <option value="" >Select Car Type</option>
+                                        <option value="1" @if($data->car_type == 1){{ 'selected' }} @endif>Pickup Truck</option>
+                                        <option value="2" @if($data->car_type == 2){{ 'selected' }} @endif>Sport Utility Vehicle</option>
+                                        <option value="3" @if($data->car_type == 3){{ 'selected' }} @endif>Mini-Van</option>
+                                        <option value="4" @if($data->car_type == 4){{ 'selected' }} @endif>Station Wagon</option>
+                                        <option value="5" @if($data->car_type == 5){{ 'selected' }} @endif>Sedan</option>
+                                    </select>
 
-                                    @error('picture')
+                                    @error('car_type')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="site_number" class="col-md-4 col-form-label text-md-right">{{ __('Site Number') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="site_number" type="text" class="form-control @error('site_number') is-invalid @enderror" value="{{ old('site_number') }} {{ $data->site_number }}" name="site_number" required autocomplete="site_number" placeholder="Enter Site Number">
+
+                                    @error('site_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="door_number" class="col-md-4 col-form-label text-md-right">{{ __('Door Number') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="door_number" type="text" class="form-control @error('door_number') is-invalid @enderror" value="{{ old('door_number') }} {{ $data->door_number }}" name="door_number" required autocomplete="door_number" placeholder="Enter Door Number">
+
+                                    @error('door_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="car_weight" class="col-md-4 col-form-label text-md-right">{{ __('Car Weight') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="car_weight" type="text" class="form-control @error('car_weight') is-invalid @enderror" value="{{ old('car_weight') }} {{ $data->car_weight }}" name="car_weight" required autocomplete="car_weight" placeholder="Enter Car Weight">
+
+                                    @error('car_weight')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="reg_date" class="col-md-4 col-form-label text-md-right">{{ __('Registration Date') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="reg_date" type="date" class="form-control @error('reg_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->reg_date))) }}" name="reg_date" required autocomplete="reg_date">
+
+                                    @error('reg_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="exp_date" class="col-md-4 col-form-label text-md-right">{{ __('Expire Date') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="exp_date" type="date" class="form-control @error('exp_date') is-invalid @enderror" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->exp_date))) }}" name="exp_date" required autocomplete="exp_date">
+
+                                    @error('exp_date')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -105,7 +194,7 @@
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('Save Driver Info') }}
+                                        {{ __('Update Car Info') }}
                                     </button>
                                 </div>
                             </div>

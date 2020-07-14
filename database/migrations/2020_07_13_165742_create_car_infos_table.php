@@ -16,6 +16,7 @@ class CreateCarInfosTable extends Migration
         Schema::create('car_infos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
+            $table->integer('driver_id');
             $table->string('number_plate');
             $table->string('engine_number');
             $table->string('fuel_type');

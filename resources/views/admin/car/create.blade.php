@@ -18,6 +18,25 @@
                             @csrf
 
                             <div class="form-group row">
+                                <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Assigned Driver') }}</label>
+
+                                <div class="col-md-6">
+                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id" required>
+                                        <option value="" >Select Assigned Driver</option>
+                                        @foreach($driver as $drivers)
+                                            <option value="{{ $drivers->id }}">{{ $drivers->driver_name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('driver_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="number_plate" class="col-md-4 col-form-label text-md-right">{{ __('Car Number') }}</label>
 
                                 <div class="col-md-6">
