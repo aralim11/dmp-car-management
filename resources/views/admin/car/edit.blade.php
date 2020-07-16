@@ -22,7 +22,7 @@
                                 <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Assigned Driver') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id" required>
+                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id">
                                         <option value="" >Select Assigned Driver</option>
                                         @foreach($driver as $drivers)
                                             <option value="{{ $drivers->id }}" @if($drivers->id == $data->driver_id){{ 'selected' }} @endif>{{ $drivers->driver_name }}</option>
@@ -30,6 +30,20 @@
                                     </select>
 
                                     @error('driver_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="car_id" class="col-md-4 col-form-label text-md-right">{{ __('Car ID') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="car_id" type="text" class="form-control @error('car_id') is-invalid @enderror" name="car_id" value="{{ old('car_id') }} {{ $data->car_id }}" required autocomplete="car_id" autofocus placeholder="Enter Car ID">
+
+                                    @error('car_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -204,4 +218,29 @@
             </div>
         </div>
     </div>
+
+@push('js')
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#driver_id").change(function(e) {
+                var driver_id = $("#driver_id").val();
+
+                $.ajax({
+                    url: '{{ URL::to('check-driver') }}',
+                    data: {'driver_id' : driver_id},
+                    type: 'GET',
+                    success: function (response) {
+                        if(response == 1)
+                        {
+                            alert("Driver Already Assigned for Another Car!!");
+                            $('#driver_id').val('');
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+@endpush
+
 @endsection

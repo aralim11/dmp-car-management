@@ -11,13 +11,16 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -51,11 +54,19 @@
                         @else
 
                             <li class="nav-item">
-                                <a class="nav-link" style="{{ Request::is('admin/driver/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('admin/driver') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.driver.index') }}">{{ __('Driver') }}</a>
+                                <a class="nav-link" style="{{ Request::is('super/driver/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/driver') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.driver.index') }}">{{ __('Driver') }}</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" style="{{ Request::is('admin/car/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('admin/car') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.car.index') }}">{{ __('Car') }}</a>
+                                <a class="nav-link" style="{{ Request::is('super/car/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/car') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.car.index') }}">{{ __('Car') }}</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" style="{{ Request::is('super/user/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/user') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.user.index') }}">{{ __('User') }}</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" style="{{ Request::is('super/requisition/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/requisition') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.requisition.index') }}">{{ __('Car Requisition') }}</a>
                             </li>
 
                             <li class="nav-item dropdown">
@@ -85,5 +96,7 @@
             @yield('content')
         </main>
     </div>
+
+    @stack('js')
 </body>
 </html>

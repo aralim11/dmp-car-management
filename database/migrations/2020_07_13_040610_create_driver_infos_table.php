@@ -16,6 +16,7 @@ class CreateDriverInfosTable extends Migration
         Schema::create('driver_infos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
+            $table->string('driver_id');
             $table->string('driver_name');
             $table->string('license_number');
             $table->string('phone_number');

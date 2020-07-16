@@ -18,6 +18,20 @@
                             @csrf
 
                             <div class="form-group row">
+                                <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Driver ID') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="driver_id" type="text" class="form-control @error('driver_id') is-invalid @enderror" name="driver_id" value="{{ old('driver_id') }}" required autocomplete="driver_id" autofocus placeholder="Enter Driver ID">
+
+                                    @error('driver_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="driver_name" class="col-md-4 col-form-label text-md-right">{{ __('Driver Name') }}</label>
 
                                 <div class="col-md-6">

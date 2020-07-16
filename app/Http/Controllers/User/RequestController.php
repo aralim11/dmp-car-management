@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Driver_info;
+use App\Requisition;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class RequestController extends Controller
 {
@@ -14,7 +18,9 @@ class RequestController extends Controller
      */
     public function index()
     {
-        //
+        $data = Requisition::where('req_user_id', Auth::id())->paginate(10);
+
+        return view('user.request.index', compact(['data']));
     }
 
     /**
@@ -24,7 +30,7 @@ class RequestController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.request.create');
     }
 
     /**
@@ -35,7 +41,29 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'requisition_type' => ['required'],
+            'start_date' => ['required'],
+            'end_date' => ['required'],
+        ]);
+
+        if($validator->fails())
+        {
+            session()->flash('delete_msg', 'Error!! Check Hints!!');
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+
+            Requisition::create([
+                'req_user_id' => Auth::id(),
+                'requisition_type' => $request->requisition_type,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+
+            session()->flash('success_msg', 'Send Requisition Successfully!');
+            return redirect()->back();
+
+        }
     }
 
     /**
@@ -46,7 +74,9 @@ class RequestController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Requisition::find($id);
+
+        return view('user.request.show', compact(['data']));
     }
 
     /**
@@ -57,7 +87,16 @@ class RequestController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Requisition::find($id);
+
+        if ($data->status == 0)
+        {
+            session()->flash('delete_msg', 'Requisition Already Accepted!!');
+            return redirect()->back();
+        } else {
+
+            return view('user.request.edit', compact(['data']));
+        }
     }
 
     /**
@@ -69,7 +108,39 @@ class RequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = Requisition::find($id);
+
+        if ($data->status == 0)
+        {
+            session()->flash('delete_msg', 'Requisition Already Accepted!!');
+            return redirect()->route('user.requisition.index');
+
+        } else {
+
+            $validator = Validator::make($request->all(), [
+                'requisition_type' => ['required'],
+                'start_date' => ['required'],
+                'end_date' => ['required'],
+            ]);
+
+            if($validator->fails())
+            {
+                session()->flash('delete_msg', 'Error!! Check Hints!!');
+                return redirect()->back()->withErrors($validator)->withInput();
+
+            } else {
+
+                $update = Requisition::find($id);
+                $update->requisition_type = $request->requisition_type;
+                $update->start_date = $request->start_date;
+                $update->end_date = $request->end_date;
+
+                $update->update();
+
+                session()->flash('success_msg', 'Send Update Successfully!');
+                return redirect()->back();
+            }
+        }
     }
 
     /**

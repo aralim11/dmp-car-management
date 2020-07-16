@@ -37,6 +37,20 @@
                             </div>
 
                             <div class="form-group row">
+                                <label for="car_id" class="col-md-4 col-form-label text-md-right">{{ __('Car ID') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="car_id" type="text" class="form-control @error('car_id') is-invalid @enderror" name="car_id" value="{{ old('car_id') }}" required autocomplete="car_id" autofocus placeholder="Enter Car ID">
+
+                                    @error('car_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="number_plate" class="col-md-4 col-form-label text-md-right">{{ __('Car Number') }}</label>
 
                                 <div class="col-md-6">
@@ -203,4 +217,26 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#driver_id").change(function(e) {
+                var driver_id = $("#driver_id").val();
+
+                $.ajax({
+                    url: '{{ URL::to('check-driver') }}',
+                    data: {'driver_id' : driver_id},
+                    type: 'GET',
+                    success: function (response) {
+                        if(response == 1)
+                        {
+                            alert("Driver Already Assigned for Another Car!!");
+                            $('#driver_id').val('');
+                        }
+                    },
+                });
+            });
+        });
+    </script>
 @endsection

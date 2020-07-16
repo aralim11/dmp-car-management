@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Super;
 
+use App\Requisition;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -14,7 +16,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view ('admin.dashboard.home');
+        $total = Requisition::all()->count();
+        $accepted = Requisition::where('status', 0)->count();
+        $pending = Requisition::where('status', 1)->count();
+
+        return view ('admin.dashboard.home', compact(['total', 'accepted', 'pending']));
     }
 
     /**

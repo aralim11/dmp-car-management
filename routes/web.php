@@ -27,16 +27,23 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::group(['as' => 'super.', 'prefix' => 'admin', 'namespace' => 'Super', 'middleware' => ['auth', 'super']], function () {
+Route::group(['as' => 'super.', 'prefix' => 'super', 'namespace' => 'Super', 'middleware' => ['auth', 'super']], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::resource('driver', 'DriverController');
     Route::resource('car', 'CarController');
+    Route::resource('user', 'UserController');
+    Route::resource('requisition', 'RequestController');
 });
 
 
  Route::group(['as' => 'user.', 'prefix' => 'user', 'namespace' => 'User', 'middleware' => ['auth', 'user']], function () {
      Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+     Route::resource('requisition', 'RequestController');
  });
 
-
 Auth::routes();
+
+
+// For jquery Request
+Route::get('check-driver', 'ScriptController@checkDriver');
+Route::get('check-car', 'ScriptController@checkCar');

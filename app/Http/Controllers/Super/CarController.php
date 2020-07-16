@@ -46,7 +46,7 @@ class CarController extends Controller
         $validator = Validator::make($request->all(), [
             'number_plate' => ['required', 'string', 'max:255'],
             'engine_number' => ['required', 'string', 'max:255'],
-            'driver_id' => ['required'],
+            'car_id' => ['required'],
             'fuel_type' => ['required'],
             'fuel_consumption' => ['required'],
             'car_type' => ['required'],
@@ -67,6 +67,7 @@ class CarController extends Controller
             Car_info::create([
                 'user_id' => Auth::id(),
                 'number_plate' => $request->number_plate,
+                'car_id' => $request->car_id,
                 'driver_id' => $request->driver_id,
                 'engine_number' => $request->engine_number,
                 'fuel_type' => $request->fuel_type,
@@ -121,7 +122,7 @@ class CarController extends Controller
         $validator = Validator::make($request->all(), [
             'number_plate' => ['required', 'string', 'max:255'],
             'engine_number' => ['required', 'string', 'max:255'],
-            'driver_id' => ['required'],
+            'car_id' => ['required'],
             'fuel_type' => ['required'],
             'fuel_consumption' => ['required'],
             'car_type' => ['required'],
@@ -141,6 +142,7 @@ class CarController extends Controller
             $update = Car_info::find($id);
             $update->number_plate = $request->number_plate;
             $update->engine_number = $request->engine_number;
+            $update->car_id = $request->car_id;
             $update->driver_id = $request->driver_id;
             $update->fuel_type = $request->fuel_type;
             $update->fuel_consumption = $request->fuel_consumption;

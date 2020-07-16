@@ -19,10 +19,24 @@
                             @method('PUT')
 
                             <div class="form-group row">
+                                <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Driver ID') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="driver_id" type="text" class="form-control @error('driver_id') is-invalid @enderror" name="driver_id" value="{{ $data->driver_id }}" required autocomplete="driver_id" autofocus placeholder="Enter Driver ID">
+
+                                    @error('driver_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label for="driver_name" class="col-md-4 col-form-label text-md-right">{{ __('Driver Name') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="driver_name" type="text" class="form-control @error('driver_name') is-invalid @enderror" name="driver_name" value="{{ old('driver_name') }} {{ $data->driver_name }}" required autocomplete="driver_name" autofocus placeholder="Enter Driver Name">
+                                    <input id="driver_name" type="text" class="form-control @error('driver_name') is-invalid @enderror" name="driver_name" value="{{ $data->driver_name }}" required autocomplete="driver_name" autofocus placeholder="Enter Driver Name">
 
                                     @error('driver_name')
                                     <span class="invalid-feedback" role="alert">
@@ -36,7 +50,7 @@
                                 <label for="license_number" class="col-md-4 col-form-label text-md-right">{{ __('License Number') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="license_number" type="text" class="form-control @error('license_number') is-invalid @enderror" name="license_number" value="{{ old('license_number') }} {{ $data->license_number }}" required autocomplete="license_number" placeholder="Enter License Number">
+                                    <input id="license_number" type="text" class="form-control @error('license_number') is-invalid @enderror" name="license_number" value="{{ $data->license_number }}" required autocomplete="license_number" placeholder="Enter License Number">
 
                                     @error('license_number')
                                     <span class="invalid-feedback" role="alert">
@@ -50,7 +64,7 @@
                                 <label for="phone_number" class="col-md-4 col-form-label text-md-right">{{ __('Phone Number') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="phone_number" type="phone" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ old('phone_number') }} {{ $data->phone_number }}" required autocomplete="phone_number" placeholder="Enter Phone Number">
+                                    <input id="phone_number" type="phone" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number" value="{{ $data->phone_number }}" required autocomplete="phone_number" placeholder="Enter Phone Number">
 
                                     @error('phone_number')
                                     <span class="invalid-feedback" role="alert">
@@ -92,7 +106,7 @@
                                 <label for="picture" class="col-md-4 col-form-label text-md-right">{{ __('Photo') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="picture" type="file" class="form-control @error('picture') is-invalid @enderror" name="picture" required autocomplete="picture">
+                                    <input id="picture" type="file" class="form-control @error('picture') is-invalid @enderror" name="picture" autocomplete="picture">
                                     <input type="hidden" name="old_picture" value="{{ $data->picture }}">
 
                                     @error('picture')

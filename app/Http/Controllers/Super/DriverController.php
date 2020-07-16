@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Super;
 
+use App\Car_info;
 use App\Driver_info;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -44,6 +45,7 @@ class DriverController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'driver_name' => ['required', 'string', 'max:255'],
+            'driver_id' => ['required', 'string', 'max:255'],
             'license_number' => ['required', 'string', 'max:255'],
             'phone_number' => ['required'],
             'license_issue_date' => ['required'],
@@ -67,6 +69,7 @@ class DriverController extends Controller
             Driver_info::create([
                 'user_id' => Auth::id(),
                 'driver_name' => $request->driver_name,
+                'driver_id' => $request->driver_id,
                 'license_number' => $request->license_number,
                 'phone_number' => $request->phone_number,
                 'license_issue_date' => $request->license_issue_date,
@@ -114,11 +117,12 @@ class DriverController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'driver_name' => ['required', 'string', 'max:255'],
+            'driver_id' => ['required', 'string', 'max:255'],
             'license_number' => ['required', 'string', 'max:255'],
             'phone_number' => ['required'],
             'license_issue_date' => ['required'],
             'license_exp_date' => ['required'],
-            'picture' => ['image', 'required', 'mimes:jpeg,png,jpg'],
+            'picture' => ['image', 'mimes:jpeg,png,jpg'],
         ]);
 
         if($validator->fails())
@@ -130,6 +134,15 @@ class DriverController extends Controller
             $time = time();
             $imagePath = public_path().'/images/';
             $get_picture = $request->file('picture');
+
+            $update = Driver_info::find($id);
+            $update->driver_name = $request->driver_name;
+            $update->driver_id = $request->driver_id;
+            $update->license_number = $request->license_number;
+            $update->phone_number = $request->phone_number;
+            $update->license_issue_date = $request->license_issue_date;
+            $update->license_exp_date = $request->license_exp_date;
+
             if (!empty($get_picture))
             {
                 if ((!empty($request->old_picture)) && (!empty($imagePath.$request->old_picture)))
@@ -140,15 +153,8 @@ class DriverController extends Controller
                 $picture = Image::make($get_picture);
                 $picture->resize(350,300);
                 $picture->save($imagePath.$time.'_'.Auth::id().'_DRIVER.'.$get_picture->getClientOriginalExtension());
+                $update->picture = $time.'_'.Auth::id().'_DRIVER.'.$get_picture->getClientOriginalExtension();
             }
-
-            $update = Driver_info::find($id);
-            $update->driver_name = $request->driver_name;
-            $update->license_number = $request->license_number;
-            $update->phone_number = $request->phone_number;
-            $update->license_issue_date = $request->license_issue_date;
-            $update->license_exp_date = $request->license_exp_date;
-            $update->picture = $time.'_'.Auth::id().'_DRIVER.'.$get_picture->getClientOriginalExtension();
 
             $update->update();
 
@@ -165,6 +171,20 @@ class DriverController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (!empty($id))
+        {
+            $delete = Driver_info::find($id);
+            $imagePath = public_path().'/images/';
+
+            if ((!empty($delete->picture)) && (!empty($imagePath.$delete->picture)))
+            {
+                File::delete($imagePath.$delete->picture);
+            }
+
+            $delete->delete();
+
+            session()->flash('delete_msg', 'Driver Info Delete!!');
+            return redirect()->back();
+        }
     }
 }

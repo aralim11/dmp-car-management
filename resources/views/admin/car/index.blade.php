@@ -17,6 +17,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Car Number</th>
+                                    <th scope="col">Car ID</th>
                                     <th scope="col">Driver Name</th>
                                     <th scope="col">Car Type</th>
                                     <th scope="col">Fuel Type</th>
@@ -33,6 +34,7 @@
                                     <tr>
                                         <th scope="row">{{ $i++ }}</th>
                                         <td>{{ $datas->number_plate }}</td>
+                                        <td>{{ $datas->car_id }}</td>
                                         <td>{{ $datas->driverName->driver_name }}</td>
                                         <td>@if($datas->car_type == 1){{ 'Pickup Truck' }}@elseif($datas->car_type == 2){{ 'Sport Utility Vehicle' }}@elseif($datas->car_type == 3){{ 'Mini-Van' }}@elseif($datas->car_type == 4){{ 'Station Wagon' }}@elseif($datas->car_type == 5){{ 'Sedan' }}@endif</td>
                                         <td>@if($datas->fuel_type == 1){{ 'Petrol' }}@elseif($datas->fuel_type == 2){{ 'Diesel' }}@elseif($datas->fuel_type == 3){{ 'Octane' }}@elseif($datas->fuel_type == 4){{ 'Kerosene' }}@elseif($datas->fuel_type == 5){{ 'GAS' }}@endif</td>
@@ -43,12 +45,13 @@
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('super.car.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm">Edit</button></a>&nbsp;&nbsp;
-
-                                                <form method="POST" action="{{ route('super.car.destroy', $datas->id) }}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-outline-danger btn-sm">Delete</button>
-                                                </form>
+                                                @if(Auth::user()->access == 0)
+                                                    <form method="POST" action="{{ route('super.car.destroy', $datas->id) }}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
