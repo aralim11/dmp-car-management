@@ -37,11 +37,13 @@
                                         <td>{{ $datas->created_at }}</td>
                                         <td>
                                             @if($datas->status == 0) <h5><span class="badge badge-success">Accept</span></h5>
-                                            @elseif($datas->status == 1) <h5><span class="badge badge-warning">Pending</span></h5>@endif
+                                            @elseif($datas->status == 1) <h5><span class="badge badge-warning">Pending</span></h5>
+                                            @elseif($datas->status == 2) <h5><span class="badge badge-info">Late</span></h5>
+                                            @elseif($datas->status == 3) <h5><span class="badge badge-danger">Cancel</span></h5>@endif
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('user.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm" @if($datas->status == 0){{ 'disabled' }}@endif>Edit</button></a>&nbsp;&nbsp;
+                                                <a href="{{ route('user.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm" @if($datas->status == 0){{ 'disabled' }}@elseif($datas->status == 3){{ 'disabled' }}@endif>Edit</button></a>&nbsp;&nbsp;
                                                 <a href="{{ route('user.requisition.show', $datas->id) }}"><button class="btn btn-outline-secondary btn-sm">View</button></a>&nbsp;&nbsp;
                                             </div>
                                         </td>

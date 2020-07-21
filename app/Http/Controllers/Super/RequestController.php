@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class RequestController extends Controller
 {
@@ -64,7 +65,21 @@ class RequestController extends Controller
     public function edit($id)
     {
         $data = Requisition::find($id);
-        $car = Car_info::all();
+        $car_id = array();
+        $car_req = Requisition::select('car_id')
+            ->where('status', '!=' ,3)
+            ->where('car_id', '!=' , NULL)
+            ->where('end_date', '>' ,date('y-m-d H:i:s'))
+            ->get();
+
+        foreach ($car_req as $car_reqs)
+        {
+            array_push($car_id, $car_reqs->car_id);
+        }
+//        print_r($car_id);
+//        exit();
+        $car = DB::table('car_infos')->whereNotIn('id', $car_id)->get();
+
 
         return view('admin.request.edit', compact(['data', 'car']));
     }
@@ -94,6 +109,7 @@ class RequestController extends Controller
             $update = Requisition::find($id);
             $update->car_id = $request->car_id;
             $update->status = $request->status;
+            $update->description = $request->description;
             $update->user_id = Auth::id();
 
             $update->update();

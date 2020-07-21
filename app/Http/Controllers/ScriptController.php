@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Car_info;
 use App\Requisition;
-use Illuminate\Http\Request;
 
 class ScriptController extends Controller
 {
@@ -21,8 +20,11 @@ class ScriptController extends Controller
     public function checkCar()
     {
         $car_id = $_GET['car_id'];
+        $start_date = $_GET['start_date'];
 
-        $data = Requisition::where('car_id', $car_id)->count();
+        $data = Requisition::where('car_id', $car_id)
+                            ->where('end_date', '<' ,$start_date)
+                            ->count();
 
         return $data;
     }

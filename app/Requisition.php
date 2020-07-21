@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Requisition extends Model
 {
     protected $fillable = [
-        'req_user_id', 'requisition_type', 'start_date', 'end_date',
+        'req_user_id', 'requisition_type', 'start_date', 'end_date', 'description',
     ];
 
     public function ReqUserName()

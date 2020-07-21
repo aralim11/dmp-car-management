@@ -56,8 +56,8 @@ class RequestController extends Controller
             Requisition::create([
                 'req_user_id' => Auth::id(),
                 'requisition_type' => $request->requisition_type,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
+                'start_date' => date("Y-m-d H:i:s", strtotime($request->start_date)),
+                'end_date' => date("Y-m-d H:i:s", strtotime($request->end_date)),
             ]);
 
             session()->flash('success_msg', 'Send Requisition Successfully!');
@@ -132,8 +132,9 @@ class RequestController extends Controller
 
                 $update = Requisition::find($id);
                 $update->requisition_type = $request->requisition_type;
-                $update->start_date = $request->start_date;
-                $update->end_date = $request->end_date;
+                $update->start_date = date("Y-m-d H:i:s", strtotime($request->start_date));
+                $update->end_date = date("Y-m-d H:i:s", strtotime($request->end_date));
+                $update->status = $request->status;
 
                 $update->update();
 

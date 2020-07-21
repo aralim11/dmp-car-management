@@ -40,8 +40,12 @@
                             <div class="form-group row">
                                 <label for="start_date" class="col-md-4 col-form-label text-md-right">{{ __('Start Date') }}</label>
 
-                                <div class="col-md-6">
-                                    <input id="start_date" type="date" class="form-control @error('start_date') is-invalid @enderror" name="start_date" required autocomplete="start_date">
+                                <div class="col-md-6 input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input @error('start_date') is-invalid @enderror" data-target="#datetimepicker1" name="start_date" required>
+
+                                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
 
                                     @error('start_date')
                                     <span class="invalid-feedback" role="alert">
@@ -54,8 +58,12 @@
                             <div class="form-group row">
                                 <label for="end_date" class="col-md-4 col-form-label text-md-right">{{ __('End Date') }}</label>
 
-                                <div class="col-md-6">
-                                    <input id="end_date" type="date" class="form-control @error('end_date') is-invalid @enderror" name="end_date" required autocomplete="end_date">
+                                <div class="col-md-6 input-group date" id="datetimepicker2" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input @error('end_date') is-invalid @enderror" data-target="#datetimepicker2" name="end_date" required autocomplete="end_date">
+
+                                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
 
                                     @error('end_date')
                                     <span class="invalid-feedback" role="alert">
@@ -78,4 +86,19 @@
             </div>
         </div>
     </div>
+    @push('js')
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+
+            $(function () {
+                $('#datetimepicker2').datetimepicker();
+            });
+        </script>
+    @endpush
 @endsection

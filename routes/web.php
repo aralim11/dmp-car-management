@@ -20,11 +20,11 @@
  });
 
 Route::get('/', function () {
-    return view('auth/login');
+    return redirect()->route('login');
 });
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::group(['as' => 'super.', 'prefix' => 'super', 'namespace' => 'Super', 'middleware' => ['auth', 'super']], function () {

@@ -33,18 +33,20 @@
                                     <tr>
                                         <th scope="row">{{ $i++ }}</th>
                                         <td>{{ $datas->ReqUserName->name }}</td>
-                                        <td>{{ $datas->getCar->car_id }}</td>
+                                        <td>@if($datas->car_id == '') <h5><span class="badge badge-danger">Not Assigned</span></h5>@else{{ $datas->getCar->car_id }}@endif</td>
                                         <td>@if($datas->requisition_type == 1){{ 'Permanent' }}@elseif($datas->requisition_type == 2){{ 'Official' }}@elseif($datas->requisition_type == 3){{ 'Rental' }}@elseif($datas->requisition_type == 4){{ 'For Guest' }}@endif</td>
                                         <td>{{ $datas->start_date }}</td>
                                         <td>{{ $datas->end_date }}</td>
                                         <td>{{ $datas->created_at }}</td>
                                         <td>
                                             @if($datas->status == 0) <h5><span class="badge badge-success">Accept</span></h5>
-                                            @elseif($datas->status == 1) <h5><span class="badge badge-warning">Pending</span></h5>@endif
+                                            @elseif($datas->status == 1) <h5><span class="badge badge-warning">Pending</span></h5>
+                                            @elseif($datas->status == 2) <h5><span class="badge badge-info">Late</span></h5>
+                                            @elseif($datas->status == 3) <h5><span class="badge badge-danger">Cancel</span></h5>@endif
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('super.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm">Review</button></a>&nbsp;&nbsp;
+                                                <a href="{{ route('super.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm" @if($datas->status == 3){{ 'disabled' }}@endif>Review</button></a>&nbsp;&nbsp;
 
                                                 @if(Auth::user()->access == 0)
                                                     <form method="POST" action="{{ route('super.requisition.destroy', $datas->id) }}">

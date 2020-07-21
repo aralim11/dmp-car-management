@@ -60,8 +60,8 @@
                             <div class="form-group row">
                                 <label for="start_date" class="col-md-4 col-form-label text-md-right">{{ __('Start Date') }}</label>
 
-                                <div class="col-md-6">
-                                    <input id="start_date" type="date" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->start_date))) }}" class="form-control @error('start_date') is-invalid @enderror" name="start_date" readonly required autocomplete="start_date">
+                                <div class="col-md-6 input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->start_date))) }}" readonly class="form-control datetimepicker-input @error('start_date') is-invalid @enderror" data-target="#datetimepicker1" name="start_date" required>
 
                                     @error('start_date')
                                     <span class="invalid-feedback" role="alert">
@@ -71,11 +71,12 @@
                                 </div>
                             </div>
 
+
                             <div class="form-group row">
                                 <label for="end_date" class="col-md-4 col-form-label text-md-right">{{ __('End Date') }}</label>
 
-                                <div class="col-md-6">
-                                    <input id="end_date" type="date" value="{{ date('Y-m-d', strtotime(str_replace('-','/', $data->end_date))) }}" class="form-control @error('end_date') is-invalid @enderror" name="end_date" readonly required autocomplete="end_date">
+                                <div class="col-md-6 input-group date" id="datetimepicker2" data-target-input="nearest">
+                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->end_date))) }}" readonly class="form-control datetimepicker-input @error('end_date') is-invalid @enderror" data-target="#datetimepicker2" name="end_date" required autocomplete="end_date">
 
                                     @error('end_date')
                                     <span class="invalid-feedback" role="alert">
@@ -89,9 +90,11 @@
                                 <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="form-control @error('status') is-invalid @enderror" id="status" readonly name="status" required>
+                                    <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <option value="" >Select A Status</option>
                                         <option value="0" @if($data->status == 0){{'selected'}}@endif>Accept</option>
                                         <option value="1" @if($data->status == 1){{'selected'}}@endif>Pending</option>
+                                        <option value="2" @if($data->status == 2){{'selected'}}@endif>Late</option>
                                     </select>
 
                                     @error('user_role')
@@ -102,9 +105,23 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
+
+                                <div class="col-md-6">
+                                    <textarea name="description" id="description" class="form-control" cols="3" rows="5">{{ $data->description }}</textarea>
+
+                                    @error('description')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button id="btnSubmit" type="submit" class="btn btn-primary" disabled>
+                                    <button id="btnSubmit" type="submit" class="btn btn-primary">
                                         {{ __('Save User Info') }}
                                     </button>
                                 </div>
@@ -116,34 +133,19 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
+    @push('js')
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
 
-            $("#car_id").change(function(e) {
-                var car_id = $("#car_id").val();
-
-                $.ajax({
-                    url: '{{ URL::to('check-car') }}',
-                    data: {'car_id' : car_id},
-                    type: 'GET',
-                    success: function (response) {
-
-                        if(response == 1)
-                        {
-                            alert("Car Already Assigned for Another Car!!");
-                            $('#car_id').val('');
-                            $('#status').val('1');
-                            $("#btnSubmit").attr("disabled", true);
-
-                        } else if (response == 0){
-
-                            $('#status').val('0');
-                            $('#btnSubmit').attr("disabled", false);
-
-                        }
-                    },
-                });
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
             });
-        });
-    </script>
+
+            $(function () {
+                $('#datetimepicker2').datetimepicker();
+            });
+        </script>
+    @endpush
 @endsection
