@@ -29,6 +29,16 @@
                                         @endforeach
                                     </select>
 
+                                    <div class="form-check" style="margin-top: 6px;">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" required>
+
+                                        <label class="form-check-label" for="remember">
+                                            {{ __('Confirm This Car') }}
+                                        </label>
+                                    </div>
+
+
+
                                     @error('driver_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -37,7 +47,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <div class="form-group row" style="margin-top: -8px;">
                                 <label for="car_id" class="col-md-4 col-form-label text-md-right">{{ __('Car ID') }}</label>
 
                                 <div class="col-md-6">
@@ -223,6 +233,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            $("#remember").attr("disabled", true);
+
             $("#driver_id").change(function(e) {
                 var driver_id = $("#driver_id").val();
 
@@ -234,7 +246,9 @@
                         if(response == 1)
                         {
                             alert("Driver Already Assigned for Another Car!!");
-                            $('#driver_id').val('');
+                            $("#remember").attr("disabled", false);
+                        } else {
+                            $("#remember").attr("disabled", true);
                         }
                     },
                 });

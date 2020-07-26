@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Super;
 
 use App\Car_info;
-use App\Requisition;
+use App\Driver_info;
+use App\Maintenance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
-class RequestController extends Controller
+class MaintenanceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +19,9 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $data = Requisition::paginate(10);
+        $data = Maintenance::paginate(10);
 
-        return view('admin.request.index', compact(['data']));
+        return view('admin.maintenance.index', compact('data'));
     }
 
     /**
@@ -31,7 +31,9 @@ class RequestController extends Controller
      */
     public function create()
     {
-        //
+        $car = Car_info::where('status', '!=', 2)->get();
+
+        return view('admin.maintenance.create', compact(['car']));
     }
 
     /**
@@ -42,7 +44,32 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'car_id' => ['required'],
+            'main_type' => ['required'],
+        ]);
+
+        if ($validator->fails())
+        {
+            session()->flash('delete_msg', 'Error!! Check Hints!!');
+            return redirect()->back()->withErrors($validator)->withInput();
+
+        } else {
+
+            Maintenance::create([
+                'user_id' => Auth::id(),
+                'car_id' => $request->car_id,
+                'main_type' => $request->main_type,
+            ]);
+
+            $update = Car_info::find($request->car_id);
+            $update->realesed_date = date('Y-m-d H:i:s');
+            $update->status = 2;
+            $update->update();
+
+            session()->flash('success_msg', 'Maintenance Added!');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -64,10 +91,10 @@ class RequestController extends Controller
      */
     public function edit($id)
     {
-        $data = Requisition::find($id);
-        $car = Car_info::where('status', 0)->get();
+        $car = Car_info::all();
+        $data = Maintenance::find($id);
 
-        return view('admin.request.edit', compact(['data', 'car']));
+        return view('admin.maintenance.edit', compact(['car', 'data']));
     }
 
     /**
@@ -80,11 +107,11 @@ class RequestController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'requisition_type' => ['required'],
-            'start_date' => ['required'],
-            'end_date' => ['required'],
+            'car_id' => ['required'],
+            'main_type' => ['required'],
             'status' => ['required'],
         ]);
+
 
         if($validator->fails())
         {
@@ -92,39 +119,22 @@ class RequestController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         } else {
 
-            $update = Requisition::find($id);
+            $main_update = Maintenance::find($id);
+            $main_update->status = $request->status;
+            $main_update->update();
 
 
-            if ($request->status == 4)
+            $update = Car_info::find($request->car_id);
+            $update->realesed_date = date('Y-m-d H:i:s');
+            if ($request->status == 0)
             {
-                $update->realesed_by = Auth::id();
-                $update->realesed_date = date('Y-m-d H:i:s');
-                $update->status = $request->status;
-                $update->description = $request->description;
-
-                $car_update = Car_info::find($update->car_id);
-                $car_update->status = 0;
-                $car_update->realesed_date = date('Y-m-d H:i:s');
-                $car_update->update();
-
-            } else {
-
-                $update->car_id = $request->car_id;
-                $update->status = $request->status;
-                $update->description = $request->description;
-                $update->user_id = Auth::id();
-
-                $car_update = Car_info::find($request->car_id);
-                $car_update->status = 1;
-                $car_update->realesed_date = date('Y-m-d H:i:s');
-                $car_update->update();
+                $update->status = 2;
             }
 
             $update->update();
 
-            session()->flash('success_msg', 'Reviewed Successfully!');
-            return redirect()->route('super.requisition.index');
-
+            session()->flash('success_msg', 'Maintenance Info Updated!!');
+            return redirect()->back();
         }
     }
 
@@ -136,13 +146,6 @@ class RequestController extends Controller
      */
     public function destroy($id)
     {
-        if (!empty($id))
-        {
-            $delete = Requisition::find($id);
-            $delete->delete();
-
-            session()->flash('delete_msg', 'Requisition Delete!!');
-            return redirect()->back();
-        }
+        //
     }
 }

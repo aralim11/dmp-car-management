@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Driver_info;
+use App\Maintenance;
 use App\Requisition;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -58,10 +59,11 @@ class RequestController extends Controller
                 'requisition_type' => $request->requisition_type,
                 'start_date' => date("Y-m-d H:i:s", strtotime($request->start_date)),
                 'end_date' => date("Y-m-d H:i:s", strtotime($request->end_date)),
+                'realesed_date' => date("Y-m-d H:i:s", strtotime($request->end_date)),
             ]);
 
             session()->flash('success_msg', 'Send Requisition Successfully!');
-            return redirect()->back();
+            return redirect()->route('user.requisition.index');
 
         }
     }
@@ -89,14 +91,8 @@ class RequestController extends Controller
     {
         $data = Requisition::find($id);
 
-        if ($data->status == 0)
-        {
-            session()->flash('delete_msg', 'Requisition Already Accepted!!');
-            return redirect()->back();
-        } else {
+        return view('user.request.edit', compact(['data']));
 
-            return view('user.request.edit', compact(['data']));
-        }
     }
 
     /**
@@ -110,18 +106,12 @@ class RequestController extends Controller
     {
         $data = Requisition::find($id);
 
-        if ($data->status == 0)
-        {
-            session()->flash('delete_msg', 'Requisition Already Accepted!!');
-            return redirect()->route('user.requisition.index');
-
-        } else {
-
             $validator = Validator::make($request->all(), [
                 'requisition_type' => ['required'],
                 'start_date' => ['required'],
                 'end_date' => ['required'],
             ]);
+
 
             if($validator->fails())
             {
@@ -131,17 +121,35 @@ class RequestController extends Controller
             } else {
 
                 $update = Requisition::find($id);
-                $update->requisition_type = $request->requisition_type;
-                $update->start_date = date("Y-m-d H:i:s", strtotime($request->start_date));
-                $update->end_date = date("Y-m-d H:i:s", strtotime($request->end_date));
-                $update->status = $request->status;
 
-                $update->update();
+                if ($request->status == 5)
+                {
+                    Maintenance::create([
+                        'req_id' => Auth::id(),
+                        'car_id' => $update->car_id,
+                        'main_type' => $request->main_type,
+                        'status' => 2,
+                    ]);
 
-                session()->flash('success_msg', 'Send Update Successfully!');
-                return redirect()->back();
+                    $update->status = $request->status;
+                    $update->update();
+
+                    session()->flash('success_msg', 'Maintenance Request Successfully!');
+                    return redirect()->route('user.requisition.index');
+
+                } else {
+
+                    $update->requisition_type = $request->requisition_type;
+                    $update->start_date = date("Y-m-d H:i:s", strtotime($request->start_date));
+                    $update->end_date = date("Y-m-d H:i:s", strtotime($request->end_date));
+                    $update->status = $request->status;
+
+                    $update->update();
+
+                    session()->flash('success_msg', 'Send Update Successfully!');
+                    return redirect()->route('user.requisition.index');
+                }
             }
-        }
     }
 
     /**

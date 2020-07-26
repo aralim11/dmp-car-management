@@ -64,6 +64,15 @@ class CarController extends Controller
 
         } else {
 
+            $driver = Car_info::where('driver_id', $request->driver_id)->first();
+
+            if (!empty($driver))
+            {
+                $update = Car_info::find($driver->id);
+                $update->driver_id = NULL;
+                $update->update();
+            }
+
             Car_info::create([
                 'user_id' => Auth::id(),
                 'number_plate' => $request->number_plate,
@@ -138,6 +147,17 @@ class CarController extends Controller
             session()->flash('delete_msg', 'Error!! Check Hints!!');
             return redirect()->back()->withErrors($validator)->withInput();
         } else {
+
+          $driver = Car_info::where('driver_id', $request->driver_id)->first();
+
+            if (!empty($driver))
+            {
+                $update = Car_info::find($driver->id);
+
+                $update->driver_id = NULL;
+
+                $update->update();
+            }
 
             $update = Car_info::find($id);
             $update->number_plate = $request->number_plate;

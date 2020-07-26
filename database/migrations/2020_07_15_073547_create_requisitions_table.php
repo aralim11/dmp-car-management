@@ -19,8 +19,10 @@ class CreateRequisitionsTable extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('car_id')->nullable();
             $table->integer('requisition_type');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('status')->default(1);
+            $table->integer('realesed_by')->nullable();
+            $table->dateTime('realesed_date')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->timestamps();

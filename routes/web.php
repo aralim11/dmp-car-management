@@ -33,6 +33,7 @@ Route::group(['as' => 'super.', 'prefix' => 'super', 'namespace' => 'Super', 'mi
     Route::resource('car', 'CarController');
     Route::resource('user', 'UserController');
     Route::resource('requisition', 'RequestController');
+    Route::resource('maintenance', 'MaintenanceController');
 });
 
 

@@ -62,6 +62,10 @@
                             </li>
 
                             <li class="nav-item">
+                                <a class="nav-link" style="{{ Request::is('super/maintenance/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/maintenance') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.maintenance.index') }}">{{ __('Maintenance') }}</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" style="{{ Request::is('super/user/*') ? 'font-weight: bold; color: black;' : '' }} {{ Request::is('super/user') ? 'font-weight: bold; color: black;' : '' }}" href="{{ route('super.user.index') }}">{{ __('User') }}</a>
                             </li>
 

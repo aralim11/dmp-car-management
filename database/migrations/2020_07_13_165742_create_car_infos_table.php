@@ -16,8 +16,8 @@ class CreateCarInfosTable extends Migration
         Schema::create('car_infos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
-            $table->integer('driver_id');
-            $table->string('car_id');
+            $table->integer('driver_id')->unique()->nullable();
+            $table->string('car_id')->unique();
             $table->string('number_plate');
             $table->string('engine_number');
             $table->string('fuel_type');
@@ -28,6 +28,8 @@ class CreateCarInfosTable extends Migration
             $table->double('car_weight');
             $table->date('reg_date');
             $table->date('exp_date');
+            $table->dateTime('realesed_date')->nullable();
+            $table->integer('status')->default(0)->comment('0=Available, 1=Car On Service, 2=Car Under Maintenance');
             $table->timestamps();
         });
     }

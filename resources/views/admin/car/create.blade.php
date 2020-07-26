@@ -21,7 +21,7 @@
                                 <label for="driver_id" class="col-md-4 col-form-label text-md-right">{{ __('Assigned Driver') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id" required>
+                                    <select class="form-control @error('driver_id') is-invalid @enderror" id="driver_id" name="driver_id">
                                         <option value="" >Select Assigned Driver</option>
                                         @foreach($driver as $drivers)
                                             <option value="{{ $drivers->id }}">{{ $drivers->driver_name }}</option>
@@ -232,7 +232,6 @@
                         if(response == 1)
                         {
                             alert("Driver Already Assigned for Another Car!!");
-                            $('#driver_id').val('');
                         }
                     },
                 });

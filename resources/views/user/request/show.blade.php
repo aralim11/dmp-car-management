@@ -17,7 +17,7 @@
                         <div class="container emp-profile">
                             <form method="post">
                                 <div class="row">
-                                    @if($data->status != 0)
+                                    @if($data->status == 1)
                                         <div class="col-md-12">
                                             <h4 style="color: red; text-align: center;">No Car Assigned For This Requisition!</h4>
                                         </div>

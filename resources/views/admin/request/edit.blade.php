@@ -22,12 +22,16 @@
                                 <label for="car_id" class="col-md-4 col-form-label text-md-right">{{ __('Issued Car') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="form-control @error('car_id') is-invalid @enderror" id="car_id" name="car_id">
-                                        <option value="" >Select Car</option>
-                                        @foreach($car as $cars)
-                                            <option value="{{ $cars->id }}">{{ $cars->car_id }} - {{ $cars->engine_number }}</option>
-                                        @endforeach
-                                    </select>
+                                    @if($data->car_id == NULL)
+                                        <select class="form-control @error('car_id') is-invalid @enderror" id="car_id" name="car_id">
+                                            <option value="">Select Car</option>
+                                            @foreach($car as $cars)
+                                                <option value="{{ $cars->id }}" @if($cars->id == $data->car_id){{'selected'}}@endif>{{ $cars->car_id }} - {{ $cars->engine_number }}</option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <input type="text" class="form-control @error('car_id') is-invalid @enderror" name="car_id" value="{{ $data->getCar->car_id }}" required readonly>
+                                    @endif
 
                                     @error('user_role')
                                     <span class="invalid-feedback" role="alert">
@@ -91,10 +95,15 @@
 
                                 <div class="col-md-6">
                                     <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        @if($data->car_id == NULL)
                                         <option value="" >Select A Status</option>
                                         <option value="0" @if($data->status == 0){{'selected'}}@endif>Accept</option>
                                         <option value="1" @if($data->status == 1){{'selected'}}@endif>Pending</option>
                                         <option value="2" @if($data->status == 2){{'selected'}}@endif>Late</option>
+                                        @endif
+                                        @if($data->car_id != NULL)
+                                            <option value="4" @if($data->status == 4){{'selected'}}@endif>Release</option>
+                                        @endif
                                     </select>
 
                                     @error('user_role')
@@ -122,7 +131,7 @@
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
                                     <button id="btnSubmit" type="submit" class="btn btn-primary">
-                                        {{ __('Save User Info') }}
+                                        {{ __('Update Requisition') }}
                                     </button>
                                 </div>
                             </div>
@@ -134,17 +143,20 @@
     </div>
 
     @push('js')
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
-
         <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker1').datetimepicker();
-            });
 
-            $(function () {
-                $('#datetimepicker2').datetimepicker();
+            $(document).ready(function() {
+
+                $("#car_id").change(function(){
+                    var car_id = $("#car_id").val();
+                    if(car_id != '')
+                    {
+                        $("#status").val(0);
+                    } else {
+                        $("#status").val(1);
+                    }
+
+                });
             });
         </script>
     @endpush

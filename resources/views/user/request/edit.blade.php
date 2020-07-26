@@ -22,7 +22,7 @@
                                 <label for="requisition_type" class="col-md-4 col-form-label text-md-right">{{ __('Requisition Type') }}</label>
 
                                 <div class="col-md-6">
-                                    <select class="form-control @error('requisition_type') is-invalid @enderror" id="requisition_type" name="requisition_type" required>
+                                    <select class="form-control @error('requisition_type') is-invalid @enderror" id="requisition_type" name="requisition_type" @if($data->status == 0){{'readonly'}}@endif required>
                                         <option value="" >Select Requisition Type</option>
                                         <option value="1" @if($data->requisition_type == 1){{ 'selected' }}@endif>Permanent</option>
                                         <option value="2" @if($data->requisition_type == 2){{ 'selected' }}@endif>Official</option>
@@ -42,11 +42,13 @@
                                 <label for="start_date" class="col-md-4 col-form-label text-md-right">{{ __('Start Date') }}</label>
 
                                 <div class="col-md-6 input-group date" id="datetimepicker1" data-target-input="nearest">
-                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->start_date))) }}" class="form-control datetimepicker-input @error('start_date') is-invalid @enderror" data-target="#datetimepicker1" name="start_date" required>
+                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->start_date))) }}" class="form-control datetimepicker-input @error('start_date') is-invalid @enderror" data-target="#datetimepicker1" name="start_date" @if($data->status == 0){{'readonly'}}@endif required>
 
-                                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
+                                    @if($data->status != 0)
+                                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    @endif
 
                                     @error('start_date')
                                     <span class="invalid-feedback" role="alert">
@@ -61,11 +63,13 @@
                                 <label for="end_date" class="col-md-4 col-form-label text-md-right">{{ __('End Date') }}</label>
 
                                 <div class="col-md-6 input-group date" id="datetimepicker2" data-target-input="nearest">
-                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->end_date))) }}" class="form-control datetimepicker-input @error('end_date') is-invalid @enderror" data-target="#datetimepicker2" name="end_date" required autocomplete="end_date">
+                                    <input type="text" value="{{ date('Y-m-d h:i A', strtotime(str_replace('-','/', $data->end_date))) }}" class="form-control datetimepicker-input @error('end_date') is-invalid @enderror" data-target="#datetimepicker2" name="end_date" required autocomplete="end_date" @if($data->status == 0){{'readonly'}}@endif>
 
-                                    <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    </div>
+                                    @if($data->status != 0)
+                                        <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    @endif
 
                                     @error('end_date')
                                     <span class="invalid-feedback" role="alert">
@@ -75,13 +79,44 @@
                                 </div>
                             </div>
 
+                            @if($data->status == 0)
+                                <div class="form-group row">
+                                    <label for="main_type" class="col-md-4 col-form-label text-md-right">{{ __('Maintenance Type') }}</label>
+
+                                    <div class="col-md-6">
+                                        <select class="form-control @error('main_type') is-invalid @enderror" id="main_type" name="main_type" required>
+                                            <option value="" >Select Maintenance Type</option>
+                                            <option value="1">Paper Work</option>
+                                            <option value="2">Engine Problem</option>
+                                            <option value="3">Electrical Problem</option>
+                                            <option value="4">Oil/Air Filter Change</option>
+                                            <option value="5">Brake Problem</option>
+                                            <option value="6">Lights Problem</option>
+                                            <option value="7">Gear Problem</option>
+                                            <option value="8">Gear Oil Change</option>
+                                            <option value="9">Car Interior</option>
+                                            <option value="10">Other</option>
+                                        </select>
+
+                                        @error('requisition_type')
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="form-group row">
                                 <label for="status" class="col-md-4 col-form-label text-md-right">{{ __('Status') }}</label>
 
                                 <div class="col-md-6">
                                     <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                                        <option value="" >Select Cancel Status</option>
+                                    @if($data->status != 0)
                                         <option value="3">Cancel</option>
+                                    @elseif($data->status == 0)
+                                        <option value="5">Maintenance</option>
+                                    @endif
                                     </select>
 
                                     @error('user_role')

@@ -42,11 +42,13 @@
                                             @if($datas->status == 0) <h5><span class="badge badge-success">Accept</span></h5>
                                             @elseif($datas->status == 1) <h5><span class="badge badge-warning">Pending</span></h5>
                                             @elseif($datas->status == 2) <h5><span class="badge badge-info">Late</span></h5>
-                                            @elseif($datas->status == 3) <h5><span class="badge badge-danger">Cancel</span></h5>@endif
+                                            @elseif($datas->status == 3) <h5><span class="badge badge-danger">Cancel</span></h5>
+                                            @elseif($datas->status == 4) <h5><span class="badge badge-secondary">Released</span></h5>@endif
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('super.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm" @if($datas->status == 3){{ 'disabled' }}@endif>Review</button></a>&nbsp;&nbsp;
+
+                                                <a href="{{ route('super.requisition.edit', $datas->id) }}"><button class="btn btn-outline-primary btn-sm" @if($datas->status == 3 || $datas->status == 4){{ 'disabled' }}@endif>Review</button></a>&nbsp;&nbsp;
 
                                                 @if(Auth::user()->access == 0)
                                                     <form method="POST" action="{{ route('super.requisition.destroy', $datas->id) }}">
@@ -62,6 +64,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $data->links() }}
                     </div>
                 </div>
             </div>
